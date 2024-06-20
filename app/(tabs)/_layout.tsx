@@ -15,8 +15,8 @@ const styles = StyleSheet.create({
     highlightedIcon: {
         borderStyle: 'dashed',
         borderWidth: 2,
-        borderRadius: 24,
-        borderColor: 'lightblue',
+        borderRadius: 15,
+        borderColor: '#007aff',
     },
     backgroundCircle: {
         flexDirection: 'row',
@@ -52,7 +52,7 @@ const TabsLayout = () => {
                     headerShown: true,
                     header: () => <Header />,
                     tabBarIcon: ({ focused }) =>
-                        tabBarIcon(Images.svgs.messages.source, focused),
+                        tabBarIcon(Images.svgs.home.source, focused),
                 }}
             />
             <Tabs.Screen
@@ -62,7 +62,7 @@ const TabsLayout = () => {
                     headerShown: true,
                     header: () => <Header />,
                     tabBarIcon: ({ focused }) =>
-                        tabBarIcon(Images.svgs.triangle.source, focused),
+                        tabBarIcon(Images.svgs.document.source, focused),
                 }}
             />
             <Tabs.Screen
@@ -72,7 +72,7 @@ const TabsLayout = () => {
                     headerShown: true,
                     header: () => <Header />,
                     tabBarIcon: ({ focused }) =>
-                        tabBarIcon(Images.svgs.profile.source, focused),
+                        tabBarIcon(Images.svgs.gear.source, focused),
                 }}
             />
         </Tabs>
