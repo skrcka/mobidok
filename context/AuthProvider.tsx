@@ -17,7 +17,7 @@ const AuthContext = createContext<AuthType>({
 
 export const useAuth = () => useContext(AuthContext);
 
-function useProtectedRoute(user: any) {
+function useProtectedRoute(user: User | null) {
     const segments = useSegments();
     const router = useRouter();
 
@@ -33,7 +33,7 @@ function useProtectedRoute(user: any) {
             router.replace('/login');
         } else if (user && inAuthGroup) {
             // Redirect away from the sign-in page.
-            router.replace('/DashBoardPage');
+            router.replace('/HomePage');
         }
     }, [user, segments, router]);
 }

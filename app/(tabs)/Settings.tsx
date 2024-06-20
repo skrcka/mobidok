@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native';
 
-const ProfilePage = () => {
+const Settings = () => {
     return (
         <View
             style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
@@ -8,4 +8,4 @@ const ProfilePage = () => {
         </View>
     );
 };
-export default ProfilePage;
+export default Settings;

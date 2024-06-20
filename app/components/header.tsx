@@ -17,7 +17,7 @@ const Header = () => {
             <View
                 style={{
                     flexDirection: 'row',
-                    justifyContent: 'space-between',
+                    justifyContent: 'center',
                     alignItems: 'center',
                     width: '100%',
                     height: 100,
@@ -25,24 +25,24 @@ const Header = () => {
                     padding: 10,
                 }}>
                 <View>
-                    <TouchableOpacity onPress={onPress}>
+                    {/* <TouchableOpacity onPress={onPress}>
                         <SvgXml
                             xml={Images.svgs.hamburger.source}
                             width="20"
                             height="20"
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
                 <View>
-                    <Text>Header</Text>
+                    <Text>Mobidok</Text>
                 </View>
-                <View>
+                {/* <View>
                     <Image
                         source={Images.header.bell.source}
                         style={{ width: 20, height: 20 }}
                         resizeMode="contain"
                     />
-                </View>
+                </View> */}
             </View>
         </>
     );
