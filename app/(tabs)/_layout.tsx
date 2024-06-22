@@ -37,7 +37,7 @@ const tabBarIcon = (iconSource, focused) => (
     <View
         style={[styles.iconContainer, focused ? styles.highlightedIcon : null]}>
         <View style={[styles.backgroundCircle]}>
-            <SvgXml xml={iconSource} width="70%" height="70%" />
+            <SvgXml color="#007aff" xml={iconSource} width="70%" height="70%" />
         </View>
     </View>
 );
