@@ -1,4 +1,4 @@
-rootProject.name = 'mobidok'
+rootProject.name = 'Mobidok'
 
 dependencyResolutionManagement {
   versionCatalogs {
