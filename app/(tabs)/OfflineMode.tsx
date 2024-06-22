@@ -15,6 +15,19 @@ const OfflineMode = () => {
     //     document.getElementsByTagName('head')[0].appendChild(meta);
     // `;
 
+    const handleMessageFromWeb = (event) => {
+        const message = event.nativeEvent.data;
+        console.log('Message received from web app:', message);
+    };
+
+    const sendMessageToWeb = () => {
+        const message = JSON.stringify({
+            type: 'greeting',
+            payload: 'Hello from React Native!',
+        });
+        webviewRef.current.postMessage(message);
+    };
+
     return (
         <WebView
             source={{ uri: OFFLINE_URL }}
@@ -23,6 +36,7 @@ const OfflineMode = () => {
             allowsBackForwardNavigationGestures
             setDisplayZoomControls={false}
             // injectedJavaScript={INJECTEDJAVASCRIPT}
+            onMessage={handleMessageFromWeb} // window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'greeting', payload: 'Hello from Web App!' }));
             onNavigationStateChange={(event) => {
                 if (event.url.includes(OFFLINE_URL)) {
                 } else if (event.url.includes(APP_URL)) {
