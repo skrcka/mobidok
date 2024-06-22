@@ -11,14 +11,15 @@ import {
 import { Provider, useDispatch, useSelector } from 'react-redux';
 
 import Sidebar from './components/SideBar';
+import { deinitBluetooth, initBluetooth } from './store/ble.reducer';
 import { closeSidebar } from './store/sidebar.reducer';
-import store from './store/store';
+import store, { AppDispatch, RootState } from './store/store';
 import { AuthProvider } from '../context/AuthProvider';
 
 const App = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const isSidebarOpen = useSelector(
-        (state: any) => state.sidebar.isSidebarOpen
+        (state: RootState) => state.sidebar.isSidebarOpen
     );
     const sidebarTranslation = useMemo(
         () => new Animated.Value(isSidebarOpen ? 0 : -250),
@@ -28,6 +29,13 @@ const App = () => {
     const handleCloseSidebar = () => {
         dispatch(closeSidebar());
     };
+
+    useEffect(() => {
+        initBluetooth();
+        return () => {
+            deinitBluetooth();
+        };
+    }, []);
 
     useEffect(() => {
         Animated.timing(sidebarTranslation, {

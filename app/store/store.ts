@@ -1,11 +1,17 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
-import sidebarReducer from './sidebar.reducer'; // Import your sidebar reducer
+import bleReducer from './ble.reducer';
+import sidebarReducer from './sidebar.reducer';
 
-// Create the Redux store
-const store = configureStore({
-    reducer: {
-        sidebar: sidebarReducer,
-    },
+const rootReducer = combineReducers({
+    sidebar: sidebarReducer,
+    ble: bleReducer,
 });
+
+const store = configureStore({
+    reducer: rootReducer,
+});
+
+export type RootState = ReturnType<typeof rootReducer>;
+export type AppDispatch = typeof store.dispatch;
 export default store;

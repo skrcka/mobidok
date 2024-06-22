@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
+
 import { closeSidebar } from '../store/sidebar.reducer'; // Make sure this import is correct
 
 const Sidebar = () => {
@@ -14,7 +15,6 @@ const Sidebar = () => {
         <View style={styles.sidebar}>
             <Text style={styles.header}>Sidebar Menu</Text>
             <Button title="Close Sidebar" onPress={handleCloseSidebar} />
-            {/* Add other sidebar menu items here */}
         </View>
     );
 };

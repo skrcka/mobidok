@@ -1,6 +1,6 @@
-import { Tabs, useNavigation } from 'expo-router';
+import { Tabs } from 'expo-router';
 import React from 'react';
-import { Image, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import Images from '../../assets/index';
