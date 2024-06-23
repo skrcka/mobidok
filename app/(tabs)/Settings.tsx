@@ -1,3 +1,4 @@
+import * as Application from 'expo-application';
 import { useEffect } from 'react';
 import {
     View,
@@ -8,74 +9,36 @@ import {
     Button,
 } from 'react-native';
 
-import { useBleManager } from '../../context/BluetoothProvider';
+import BluetoothSettings from '../components/bluetoothSetting';
 
 const Settings = () => {
-    const bleManager = useBleManager();
-
-    useEffect(() => {
-        bleManager.scanDevices();
-
-        return () => {
-            bleManager.stopDeviceScan();
-        };
-    }, []);
-
-    const renderItem = ({ item }) => (
-        <TouchableOpacity
-            style={styles.deviceItem}
-            onPress={() => bleManager.connectToDevice(item)}>
-            <Text style={styles.deviceName}>
-                {item.name ? item.name : 'Unnamed Device'}
-            </Text>
-            <Text style={styles.deviceId}>{item.id}</Text>
-        </TouchableOpacity>
-    );
-
     return (
-        <View style={{ flex: 1, paddingHorizontal: 10 }}>
-            <Text>Nastaveni</Text>
-            <Text>Bluetooth State: {bleManager.state}</Text>
-            <Button title="Rescan" onPress={bleManager.scanDevices} />
-            <FlatList
-                data={bleManager.availableDevices}
-                keyExtractor={(item) => item.id}
-                renderItem={renderItem}
-                contentContainerStyle={styles.deviceList}
-            />
-            {bleManager.lastConnectedDevice && (
-                <View style={styles.lastDeviceContainer}>
-                    <Text style={styles.lastDeviceTitle}>
-                        Last Connected Device:
-                    </Text>
-                    <Text style={styles.lastDeviceName}>
-                        {bleManager.lastConnectedDevice.name}
-                    </Text>
-                    <Text style={styles.lastDeviceId}>
-                        {bleManager.lastConnectedDevice.id}
-                    </Text>
-                </View>
-            )}
-        </View>
+        <>
+            <View style={styles.settingsContainer}>
+                <BluetoothSettings />
+            </View>
+            <View style={styles.copyrightContainer}>
+                <Text style={styles.copyrightText}>
+                    v{Application.nativeApplicationVersion} - Copyright @ BMI
+                    SYSTEM s.r.o. 2023
+                </Text>
+            </View>
+        </>
     );
 };
 
 const styles = StyleSheet.create({
-    deviceList: {
-        padding: 20,
+    settingsContainer: {
+        flex: 1,
     },
-    deviceItem: {
-        padding: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+    copyrightContainer: {
+        paddingTop: 15,
+        paddingBottom: 15,
+        backgroundColor: '#f8f9fa',
+        alignItems: 'center',
     },
-    deviceName: {
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    deviceId: {
-        fontSize: 12,
-        color: '#666',
+    copyrightText: {
+        fontSize: 11,
     },
     lastDeviceContainer: {
         marginTop: 20,

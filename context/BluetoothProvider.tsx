@@ -17,6 +17,7 @@ type BleType = {
     connectToDevice: (device: Device) => void;
     scanDevices: () => void;
     stopDeviceScan: () => void;
+    enableBluetooth: () => Promise<boolean>;
 };
 
 const BleManagerContext = createContext<BleType>({
@@ -28,6 +29,7 @@ const BleManagerContext = createContext<BleType>({
     connectToDevice: (_: Device) => {},
     scanDevices: () => {},
     stopDeviceScan: () => {},
+    enableBluetooth: async () => false,
 });
 
 const loadLastConnectedDevice = async () => {
@@ -147,6 +149,16 @@ export const BleManagerProvider = ({ children }) => {
         bleManager.stopDeviceScan();
     };
 
+    const enableBluetooth = async () => {
+        try {
+            await bleManager.enable();
+            return true;
+        } catch (error) {
+            console.log('Failed to enable Bluetooth:', error);
+            return false;
+        }
+    };
+
     const pairWithDevice = (device) => {
         // Assuming pairing involves writing to a specific characteristic
         const serviceUUID = 'your-service-uuid';
@@ -179,6 +191,7 @@ export const BleManagerProvider = ({ children }) => {
                 connectToDevice,
                 scanDevices,
                 stopDeviceScan,
+                enableBluetooth,
             }}>
             {children}
         </BleManagerContext.Provider>
