@@ -22,6 +22,7 @@
       "infoPlist": {
         "NSBluetoothAlwaysUsageDescription": "Allow $(PRODUCT_NAME) to connect to bluetooth devices",
         "NSBluetoothPeripheralUsageDescription": "Allow $(PRODUCT_NAME) to connect to bluetooth devices",
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to use camera",
         "UIBackgroundModes": [
           "bluetooth-central",
           "bluetooth-peripheral"
@@ -39,7 +40,8 @@
         "android.permission.BLUETOOTH_CONNECT",
         "ACCESS_FINE_LOCATION",
         "BLUETOOTH_SCAN",
-        "BLUETOOTH_CONNECT"
+        "BLUETOOTH_CONNECT",
+        "CAMERA"
       ],
       "package": "com.bmisystem.mobidok"
     },

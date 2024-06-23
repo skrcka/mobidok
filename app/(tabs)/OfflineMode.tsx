@@ -1,19 +1,32 @@
 import { useRouter } from 'expo-router';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Linking } from 'react-native';
 import WebView from 'react-native-webview';
+import { useSelector } from 'react-redux';
 
 import { APP_URL, OFFLINE_URL } from '../constants/const';
+import { RootState } from '../store/store';
 
 const OfflineMode = () => {
     const router = useRouter();
     const webviewRef = useRef<WebView>(null);
-    // const INJECTEDJAVASCRIPT = `
-    //     const meta = document.createElement('meta');
-    //     meta.setAttribute('content', initial-scale=0.5, maximum-scale=0.5, user-scalable=0');
-    //     meta.setAttribute('name', 'viewport');
-    //     document.getElementsByTagName('head')[0].appendChild(meta);
-    // `;
+    const typ_ids = useSelector((state: RootState) => state.offline.typ_ids);
+    const user_id = useSelector((state: RootState) => state.offline.user_id);
+    const INJECTEDJAVASCRIPT = `
+        const meta = document.createElement('meta');
+        meta.setAttribute('content', initial-scale=0.5, maximum-scale=0.5, user-scalable=0');
+        meta.setAttribute('name', 'viewport');
+        document.getElementsByTagName('head')[0].appendChild(meta);
+    `;
+
+    const [uri, setUri] = useState<string>();
+
+    useEffect(() => {
+        const url = new URL(OFFLINE_URL);
+        if (typ_ids) url.searchParams.append('typ_id', typ_ids.join(','));
+        url.searchParams.append('uzivatelId', user_id);
+        setUri(url.toString());
+    }, [typ_ids, user_id]);
 
     const handleMessageFromWeb = (event) => {
         const message = event.nativeEvent.data;
@@ -30,12 +43,12 @@ const OfflineMode = () => {
 
     return (
         <WebView
-            source={{ uri: OFFLINE_URL }}
+            source={{ uri }}
             ref={webviewRef}
             scalesPageToFit
             allowsBackForwardNavigationGestures
             setDisplayZoomControls={false}
-            // injectedJavaScript={INJECTEDJAVASCRIPT}
+            injectedJavaScript={INJECTEDJAVASCRIPT}
             onMessage={handleMessageFromWeb} // window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'greeting', payload: 'Hello from Web App!' }));
             onNavigationStateChange={(event) => {
                 if (event.url.includes(OFFLINE_URL)) {

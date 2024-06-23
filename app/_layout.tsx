@@ -11,10 +11,11 @@ import {
 import { Provider, useDispatch, useSelector } from 'react-redux';
 
 import Sidebar from './components/SideBar';
-import { deinitBluetooth, initBluetooth } from './store/ble.reducer';
 import { closeSidebar } from './store/sidebar.reducer';
 import store, { AppDispatch, RootState } from './store/store';
 import { AuthProvider } from '../context/AuthProvider';
+import { BleManagerProvider } from '../context/BluetoothProvider';
+import { PermissionProvider } from '../context/PermissionProvider';
 
 const App = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -31,13 +32,6 @@ const App = () => {
     };
 
     useEffect(() => {
-        initBluetooth();
-        return () => {
-            deinitBluetooth();
-        };
-    }, []);
-
-    useEffect(() => {
         Animated.timing(sidebarTranslation, {
             toValue: isSidebarOpen ? 0 : -250,
             duration: 1000,
@@ -45,6 +39,7 @@ const App = () => {
             useNativeDriver: true,
         }).start();
     }, [isSidebarOpen, sidebarTranslation]);
+
     return (
         <>
             <Stack>
@@ -72,9 +67,13 @@ const App = () => {
 const AppLayout = () => {
     return (
         <Provider store={store}>
-            <AuthProvider>
-                <App />
-            </AuthProvider>
+            <PermissionProvider>
+                <BleManagerProvider>
+                    <AuthProvider>
+                        <App />
+                    </AuthProvider>
+                </BleManagerProvider>
+            </PermissionProvider>
         </Provider>
     );
 };

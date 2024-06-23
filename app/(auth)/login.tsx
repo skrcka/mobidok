@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Button } from 'react-native';
 
 import { useAuth } from '../../context/AuthProvider';
 
@@ -14,9 +14,7 @@ export default function Login() {
     return (
         <View
             style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <TouchableOpacity onPress={login}>
-                <Text>Login</Text>
-            </TouchableOpacity>
+            <Button onPress={login} title="Login" />
         </View>
     );
 }

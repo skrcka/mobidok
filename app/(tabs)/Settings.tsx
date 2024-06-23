@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
     View,
     Text,
@@ -7,55 +7,24 @@ import {
     StyleSheet,
     Button,
 } from 'react-native';
-import { useSelector } from 'react-redux';
 
-import { bleManager, connectToDevice } from '../store/ble.reducer';
-import { RootState } from '../store/store';
+import { useBleManager } from '../../context/BluetoothProvider';
 
 const Settings = () => {
-    const [devices, setDevices] = useState([]);
-    const bluetoothState = useSelector(
-        (state: RootState) => state.ble.bluetoothState
-    );
-    const lastConnectedDevice = useSelector(
-        (state: RootState) => state.ble.lastConnectedDevice
-    );
+    const bleManager = useBleManager();
 
     useEffect(() => {
-        scanAndDisplayDevices();
+        bleManager.scanDevices();
 
         return () => {
             bleManager.stopDeviceScan();
-            bleManager.destroy();
         };
     }, []);
-
-    const scanAndDisplayDevices = () => {
-        const discoveredDevices = new Map();
-        setDevices([]); // Clear the current list of devices
-
-        bleManager.startDeviceScan(null, null, (error, device) => {
-            if (error) {
-                console.log(error);
-                return;
-            }
-
-            if (device && !discoveredDevices.has(device.id)) {
-                discoveredDevices.set(device.id, device);
-                setDevices(Array.from(discoveredDevices.values()));
-            }
-        });
-    };
-
-    const handleRescan = () => {
-        bleManager.stopDeviceScan();
-        scanAndDisplayDevices();
-    };
 
     const renderItem = ({ item }) => (
         <TouchableOpacity
             style={styles.deviceItem}
-            onPress={() => connectToDevice(item)}>
+            onPress={() => bleManager.connectToDevice(item)}>
             <Text style={styles.deviceName}>
                 {item.name ? item.name : 'Unnamed Device'}
             </Text>
@@ -64,27 +33,26 @@ const Settings = () => {
     );
 
     return (
-        <View
-            style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <View style={{ flex: 1, paddingTop: 10, paddingHorizontal: 10 }}>
             <Text>Nastaveni</Text>
-            <Text>Bluetooth State: {bluetoothState}</Text>
-            <Button title="Rescan" onPress={handleRescan} />
+            <Text>Bluetooth State: {bleManager.state}</Text>
+            <Button title="Rescan" onPress={bleManager.scanDevices} />
             <FlatList
-                data={devices}
+                data={bleManager.availableDevices}
                 keyExtractor={(item) => item.id}
                 renderItem={renderItem}
                 contentContainerStyle={styles.deviceList}
             />
-            {lastConnectedDevice && (
+            {bleManager.lastConnectedDevice && (
                 <View style={styles.lastDeviceContainer}>
                     <Text style={styles.lastDeviceTitle}>
                         Last Connected Device:
                     </Text>
                     <Text style={styles.lastDeviceName}>
-                        {lastConnectedDevice.name}
+                        {bleManager.lastConnectedDevice.name}
                     </Text>
                     <Text style={styles.lastDeviceId}>
-                        {lastConnectedDevice.id}
+                        {bleManager.lastConnectedDevice.id}
                     </Text>
                 </View>
             )}

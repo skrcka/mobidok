@@ -1,11 +1,11 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
-import bleReducer from './ble.reducer';
+import offlineReducer from './offline.reducer';
 import sidebarReducer from './sidebar.reducer';
 
 const rootReducer = combineReducers({
     sidebar: sidebarReducer,
-    ble: bleReducer,
+    offline: offlineReducer,
 });
 
 const store = configureStore({
