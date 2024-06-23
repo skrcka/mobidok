@@ -1,30 +1,29 @@
 import { useEffect, useState } from 'react';
 import {
-    Image,
     View,
     Text,
     TouchableOpacity,
     StyleSheet,
-    Button,
     FlatList,
     Animated,
+    ActivityIndicator,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { useDispatch } from 'react-redux';
 
 import Images from '../../assets/index';
 import { useBleManager } from '../../context/BluetoothProvider';
+import { PRINTER_NAME_PREFIX } from '../constants/const';
 
 const BluetoothSettings = () => {
     const bleManager = useBleManager();
     const [expanded, setExpanded] = useState(false);
     const toggleExpanded = () => {
         setExpanded(!expanded);
-        bleManager.scanDevices();
+        bleManager.scanDevices(PRINTER_NAME_PREFIX);
     };
 
     useEffect(() => {
-        bleManager.scanDevices();
+        bleManager.scanDevices(PRINTER_NAME_PREFIX);
 
         return () => {
             bleManager.stopDeviceScan();
@@ -36,7 +35,7 @@ const BluetoothSettings = () => {
             style={styles.deviceItem}
             onPress={() => bleManager.connectToDevice(item)}>
             <Text style={styles.deviceName}>
-                {item.name ? item.name : 'Unnamed Device'}
+                {item.name ? item.name : 'Neznámé zařízení'}
             </Text>
             <Text style={styles.deviceId}>{item.id}</Text>
         </TouchableOpacity>
@@ -87,12 +86,24 @@ const BluetoothSettings = () => {
                             )}
                         </View>
                         {expanded && (
-                            <FlatList
-                                data={bleManager.availableDevices}
-                                keyExtractor={(item) => item.id}
-                                renderItem={renderItem}
-                                contentContainerStyle={styles.deviceList}
-                            />
+                            <View
+                                style={{
+                                    justifyContent: 'center',
+                                    width: '100%',
+                                }}>
+                                {bleManager.availableDevices.length === 0 && (
+                                    <ActivityIndicator
+                                        size="large"
+                                        color="black"
+                                    />
+                                )}
+                                <FlatList
+                                    data={bleManager.availableDevices}
+                                    keyExtractor={(item) => item.id}
+                                    renderItem={renderItem}
+                                    contentContainerStyle={styles.deviceList}
+                                />
+                            </View>
                         )}
                     </>
                 </Animated.View>
@@ -118,7 +129,7 @@ const styles = StyleSheet.create({
     deviceList: {
         width: '100%',
         marginHorizontal: 10,
-        marginBottom: 10,
+        marginBottom: 15,
     },
     pileButton: {
         width: 50,

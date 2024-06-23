@@ -15,7 +15,7 @@ type BleType = {
     connectedDevice: Device | null;
     availableDevices: Device[];
     connectToDevice: (device: Device) => void;
-    scanDevices: () => void;
+    scanDevices: (namePrefix?: string) => void;
     stopDeviceScan: () => void;
     enableBluetooth: () => Promise<boolean>;
 };
@@ -69,8 +69,7 @@ export const BleManagerProvider = ({ children }) => {
         }, true);
         loadLastConnectedDevice().then((device) => {
             if (device) {
-                setLastConnectedDevice(device);
-                reconnectToDevice(device);
+                reconnectToDevice();
             }
         });
 
@@ -85,49 +84,46 @@ export const BleManagerProvider = ({ children }) => {
         saveLastConnectedDevice(connectedDevice);
     }, [connectedDevice]);
 
-    const connectToDevice = (device) => {
+    const connectToDevice = (device: Device): Promise<boolean> => {
         bleManager
             .connectToDevice(device.id)
             .then((connectedDevice) => {
                 console.log('Connected to device:', connectedDevice.name);
-                setLastConnectedDevice(connectedDevice);
-                saveLastConnectedDevice(connectedDevice);
-                return connectedDevice.discoverAllServicesAndCharacteristics();
-            })
-            .then((discoveredDevice) => {
-                console.log(
-                    'Discovered services and characteristics:',
-                    discoveredDevice
-                );
-                // Perform pairing or other interactions here
-                // pairWithDevice(discoveredDevice);
+                connectedDevice
+                    .discoverAllServicesAndCharacteristics()
+                    .then(() => {
+                        setLastConnectedDevice(connectedDevice);
+                        saveLastConnectedDevice(connectedDevice);
+                        setConnectedDevice(connectedDevice);
+                        return true;
+                    });
             })
             .catch((error) => {
                 console.log('Connection error:', error);
             });
+        return Promise.resolve(false);
     };
 
-    const reconnectToDevice = (device) => {
+    const reconnectToDevice = (): Promise<boolean> => {
         bleManager
-            .connectToDevice(device.id)
+            .connectToDevice(lastConnectedDevice.id)
             .then((connectedDevice) => {
-                console.log('Reconnected to device:', connectedDevice.name);
-                return connectedDevice.discoverAllServicesAndCharacteristics();
-            })
-            .then((discoveredDevice) => {
-                console.log(
-                    'Discovered services and characteristics:',
-                    discoveredDevice
-                );
-                // Perform pairing or other interactions here
-                // pairWithDevice(discoveredDevice);
+                connectedDevice
+                    .discoverAllServicesAndCharacteristics()
+                    .then(() => {
+                        setLastConnectedDevice(connectedDevice);
+                        saveLastConnectedDevice(connectedDevice);
+                        setConnectedDevice(connectedDevice);
+                        return true;
+                    });
             })
             .catch((error) => {
                 console.log('Reconnection error:', error);
             });
+        return Promise.resolve(false);
     };
 
-    const scanDevices = () => {
+    const scanDevices = (nameFilter?: string) => {
         bleManager.stopDeviceScan();
         const discoveredDevices = new Map();
         setAvailableDevices([]);
@@ -139,6 +135,12 @@ export const BleManagerProvider = ({ children }) => {
             }
 
             if (device && !discoveredDevices.has(device.id)) {
+                if (
+                    (nameFilter && !device.name) ||
+                    !device.name.includes(nameFilter)
+                ) {
+                    return;
+                }
                 discoveredDevices.set(device.id, device);
                 setAvailableDevices(Array.from(discoveredDevices.values()));
             }
@@ -159,24 +161,26 @@ export const BleManagerProvider = ({ children }) => {
         }
     };
 
-    const pairWithDevice = (device) => {
-        // Assuming pairing involves writing to a specific characteristic
-        const serviceUUID = 'your-service-uuid';
-        const characteristicUUID = 'your-characteristic-uuid';
-        const pairingValue = 'your-pairing-value'; // This could be a string, buffer, etc., depending on the device's requirements
-
-        device
+    const writeToConnectedDevice = (
+        service: string,
+        characteristic: string,
+        value: string
+    ) => {
+        if (!connectedDevice) {
+            console.log('No connected device');
+            return;
+        }
+        connectedDevice
             .writeCharacteristicWithResponseForService(
-                serviceUUID,
-                characteristicUUID,
-                pairingValue
+                service,
+                characteristic,
+                value
             )
             .then((characteristic) => {
-                console.log('Pairing successful', characteristic);
-                // Handle successful pairing
+                console.log('Writing successful', characteristic);
             })
             .catch((error) => {
-                console.log('Pairing error', error);
+                console.log('Writing error', error);
             });
     };
 
