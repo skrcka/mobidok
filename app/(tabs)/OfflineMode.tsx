@@ -19,13 +19,14 @@ const OfflineMode = () => {
         document.getElementsByTagName('head')[0].appendChild(meta);
     `;
 
-    const [uri, setUri] = useState<string>();
+    const [uri, setUri] = useState<string>(OFFLINE_URL);
 
     useEffect(() => {
         const url = new URL(OFFLINE_URL);
         if (typ_ids) url.searchParams.append('typ_id', typ_ids.join(','));
         url.searchParams.append('uzivatelId', user_id);
-        setUri(url.toString());
+        const uri = url.toString();
+        setUri(uri);
     }, [typ_ids, user_id]);
 
     const handleMessageFromWeb = (event) => {
@@ -60,6 +61,10 @@ const OfflineMode = () => {
                     Linking.openURL(event.url);
                 }
             }}
+            domStorageEnabled
+            allowFileAccess
+            startInLoadingState
+            mediaPlaybackRequiresUserAction={false}
         />
     );
 };

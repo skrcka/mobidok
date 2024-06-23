@@ -33,7 +33,7 @@ const Settings = () => {
     );
 
     return (
-        <View style={{ flex: 1, paddingTop: 10, paddingHorizontal: 10 }}>
+        <View style={{ flex: 1, paddingHorizontal: 10 }}>
             <Text>Nastaveni</Text>
             <Text>Bluetooth State: {bleManager.state}</Text>
             <Button title="Rescan" onPress={bleManager.scanDevices} />

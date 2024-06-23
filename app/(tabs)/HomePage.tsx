@@ -47,6 +47,10 @@ const HomePage = () => {
             setDisplayZoomControls={false}
             injectedJavaScript={INJECTEDJAVASCRIPT}
             onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
+            domStorageEnabled
+            allowFileAccess
+            startInLoadingState
+            mediaPlaybackRequiresUserAction={false}
         />
     );
 };
