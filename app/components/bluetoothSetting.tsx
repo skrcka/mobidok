@@ -12,7 +12,11 @@ import { SvgXml } from 'react-native-svg';
 
 import Images from '../../assets/index';
 import { useBleManager } from '../../context/BluetoothProvider';
-import { PRINTER_NAME_PREFIX } from '../constants/const';
+import {
+    PRINTER_CHARACTERISTIC_UUID,
+    PRINTER_NAME_PREFIX,
+    PRINTER_SERVICE_UUID,
+} from '../constants/const';
 
 const BluetoothSettings = () => {
     const bleManager = useBleManager();
@@ -60,7 +64,60 @@ const BluetoothSettings = () => {
                         <View style={styles.flexRow}>
                             {bleManager.state === 'PoweredOn' ? (
                                 <>
-                                    <Text>Žádné připojené zařízení</Text>
+                                    {!bleManager.lastConnectedDevice &&
+                                    !bleManager.connectedDevice ? (
+                                        <Text>Žádné připojené zařízení</Text>
+                                    ) : (
+                                        <View style={styles.flexRowInner}>
+                                            {bleManager.connectedDevice ? (
+                                                <Text>
+                                                    {
+                                                        bleManager
+                                                            .connectedDevice
+                                                            .name
+                                                    }
+                                                </Text>
+                                            ) : (
+                                                <Text>
+                                                    {
+                                                        bleManager
+                                                            .lastConnectedDevice
+                                                            .name
+                                                    }
+                                                </Text>
+                                            )}
+                                            <TouchableOpacity
+                                                style={styles.pileButton}
+                                                onPress={() => {
+                                                    if (
+                                                        bleManager.connectedDevice
+                                                    ) {
+                                                        bleManager.writeToConnectedDevice(
+                                                            PRINTER_SERVICE_UUID,
+                                                            PRINTER_CHARACTERISTIC_UUID,
+                                                            'test'
+                                                        );
+                                                    } else {
+                                                        bleManager.reconnectToDevice();
+                                                    }
+                                                }}>
+                                                <SvgXml
+                                                    color="black"
+                                                    xml={
+                                                        bleManager.connectedDevice
+                                                            ? Images.svgs
+                                                                  .printer
+                                                                  .source
+                                                            : Images.svgs
+                                                                  .bluetoothConnected
+                                                                  .source
+                                                    }
+                                                    width="70%"
+                                                    height="70%"
+                                                />
+                                            </TouchableOpacity>
+                                        </View>
+                                    )}
                                     <TouchableOpacity
                                         style={styles.pileButton}
                                         onPress={toggleExpanded}>
@@ -195,6 +252,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         width: '100%',
+    },
+    flexRowInner: {
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginEnd: 10,
     },
 });
 

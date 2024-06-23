@@ -1,32 +1,35 @@
 import React, { createContext, useContext, useEffect } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
 
-const requestCameraPermission = async () => {
-    try {
-        const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.CAMERA,
-            {
-                title: 'Camera Permission',
-                message: 'App needs access to your camera',
-                buttonNeutral: 'Ask Me Later',
-                buttonNegative: 'Cancel',
-                buttonPositive: 'OK',
+const requestCameraPermission = async (): Promise<boolean> => {
+    if (Platform.OS === 'android') {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.CAMERA,
+                {
+                    title: 'Camera Permission',
+                    message: 'App needs access to your camera',
+                    buttonNeutral: 'Ask Me Later',
+                    buttonNegative: 'Cancel',
+                    buttonPositive: 'OK',
+                }
+            );
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                console.log('Camera permission granted');
+                return true;
+            } else {
+                console.log('Camera permission denied');
+                return false;
             }
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            console.log('Camera permission granted');
-            return true;
-        } else {
-            console.log('Camera permission denied');
-            return false;
+        } catch (err) {
+            console.warn(err);
         }
-    } catch (err) {
-        console.warn(err);
         return false;
     }
+    return true;
 };
 
-const requestBluetoothPermissions = async () => {
+const requestBluetoothPermissions = async (): Promise<boolean> => {
     if (Platform.OS === 'android') {
         try {
             const granted = await PermissionsAndroid.requestMultiple([
@@ -52,6 +55,7 @@ const requestBluetoothPermissions = async () => {
             return false;
         }
     }
+    return true;
 };
 
 enum PermissionStatus {

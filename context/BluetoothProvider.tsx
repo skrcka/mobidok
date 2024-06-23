@@ -18,6 +18,12 @@ type BleType = {
     scanDevices: (namePrefix?: string) => void;
     stopDeviceScan: () => void;
     enableBluetooth: () => Promise<boolean>;
+    reconnectToDevice: () => Promise<boolean>;
+    writeToConnectedDevice: (
+        service: string,
+        characteristic: string,
+        value: string
+    ) => void;
 };
 
 const BleManagerContext = createContext<BleType>({
@@ -30,6 +36,8 @@ const BleManagerContext = createContext<BleType>({
     scanDevices: () => {},
     stopDeviceScan: () => {},
     enableBluetooth: async () => false,
+    reconnectToDevice: async () => false,
+    writeToConnectedDevice: (_: string, __: string, ___: string) => {},
 });
 
 const loadLastConnectedDevice = async () => {
@@ -70,7 +78,7 @@ export const BleManagerProvider = ({ children }) => {
         loadLastConnectedDevice().then((device) => {
             setLastConnectedDevice(device);
             if (device) {
-                reconnectToDevice();
+                connectToDevice(device);
             }
         });
 
@@ -161,7 +169,7 @@ export const BleManagerProvider = ({ children }) => {
         }
     };
 
-    const writeToConnectedDevice = (
+    const writeToConnectedDevice = async (
         service: string,
         characteristic: string,
         value: string
@@ -170,18 +178,24 @@ export const BleManagerProvider = ({ children }) => {
             console.log('No connected device');
             return;
         }
-        connectedDevice
-            .writeCharacteristicWithResponseForService(
-                service,
-                characteristic,
-                value
-            )
-            .then((characteristic) => {
-                console.log('Writing successful', characteristic);
-            })
-            .catch((error) => {
-                console.log('Writing error', error);
-            });
+
+        const device = await connectedDevice.isConnected();
+        if (!device) {
+            console.log('Device is not connected');
+            return;
+        }
+
+        try {
+            const retCharacteristic =
+                await connectedDevice.writeCharacteristicWithResponseForService(
+                    service,
+                    characteristic,
+                    value
+                );
+            console.log('Writing successful', retCharacteristic);
+        } catch (error) {
+            console.log('Writing error', error);
+        }
     };
 
     return (
@@ -196,6 +210,8 @@ export const BleManagerProvider = ({ children }) => {
                 scanDevices,
                 stopDeviceScan,
                 enableBluetooth,
+                reconnectToDevice,
+                writeToConnectedDevice,
             }}>
             {children}
         </BleManagerContext.Provider>

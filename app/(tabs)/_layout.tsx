@@ -6,33 +6,6 @@ import { SvgXml } from 'react-native-svg';
 import Images from '../../assets/index';
 import Header from '../components/header';
 
-const styles = StyleSheet.create({
-    iconContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    highlightedIcon: {
-        borderStyle: 'dashed',
-        borderWidth: 2,
-        borderRadius: 15,
-        borderColor: '#007aff',
-    },
-    backgroundCircle: {
-        flexDirection: 'row',
-        alignContent: 'center',
-        justifyContent: 'center',
-        alignItems: 'center',
-        shadowColor: 'gray',
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.5,
-        shadowRadius: 5,
-        width: 40,
-        height: 40,
-        borderRadius: 24,
-    },
-});
-
 const tabBarIcon = (iconSource, focused) => (
     <View
         style={[styles.iconContainer, focused ? styles.highlightedIcon : null]}>
@@ -79,5 +52,32 @@ const TabsLayout = () => {
         </Tabs>
     );
 };
+
+const styles = StyleSheet.create({
+    iconContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    highlightedIcon: {
+        borderStyle: 'dashed',
+        borderWidth: 2,
+        borderRadius: 15,
+        borderColor: '#007aff',
+    },
+    backgroundCircle: {
+        flexDirection: 'row',
+        alignContent: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: 'gray',
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.5,
+        shadowRadius: 5,
+        width: 40,
+        height: 40,
+        borderRadius: 24,
+    },
+});
 
 export default TabsLayout;
