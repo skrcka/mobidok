@@ -68,6 +68,7 @@ export const BleManagerProvider = ({ children }) => {
             setState(state);
         }, true);
         loadLastConnectedDevice().then((device) => {
+            setLastConnectedDevice(device);
             if (device) {
                 reconnectToDevice();
             }
@@ -81,8 +82,11 @@ export const BleManagerProvider = ({ children }) => {
 
     useEffect(() => {
         setLastConnectedDevice(connectedDevice);
-        saveLastConnectedDevice(connectedDevice);
     }, [connectedDevice]);
+
+    useEffect(() => {
+        saveLastConnectedDevice(lastConnectedDevice);
+    }, [lastConnectedDevice]);
 
     const connectToDevice = (device: Device): Promise<boolean> => {
         bleManager
@@ -92,8 +96,6 @@ export const BleManagerProvider = ({ children }) => {
                 connectedDevice
                     .discoverAllServicesAndCharacteristics()
                     .then(() => {
-                        setLastConnectedDevice(connectedDevice);
-                        saveLastConnectedDevice(connectedDevice);
                         setConnectedDevice(connectedDevice);
                         return true;
                     });
@@ -111,8 +113,6 @@ export const BleManagerProvider = ({ children }) => {
                 connectedDevice
                     .discoverAllServicesAndCharacteristics()
                     .then(() => {
-                        setLastConnectedDevice(connectedDevice);
-                        saveLastConnectedDevice(connectedDevice);
                         setConnectedDevice(connectedDevice);
                         return true;
                     });

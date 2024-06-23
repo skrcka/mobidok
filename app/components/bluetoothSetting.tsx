@@ -34,9 +34,19 @@ const BluetoothSettings = () => {
         <TouchableOpacity
             style={styles.deviceItem}
             onPress={() => bleManager.connectToDevice(item)}>
-            <Text style={styles.deviceName}>
-                {item.name ? item.name : 'Neznámé zařízení'}
-            </Text>
+            <View style={styles.deviceNameContainer}>
+                <Text style={styles.deviceName}>
+                    {item.name ? item.name : 'Neznámé zařízení'}
+                </Text>
+                {bleManager.lastConnectedDevice?.id === item.id && (
+                    <SvgXml
+                        color="green"
+                        xml={Images.svgs.checkmark.source}
+                        width="100%"
+                        height="100%"
+                    />
+                )}
+            </View>
             <Text style={styles.deviceId}>{item.id}</Text>
         </TouchableOpacity>
     );
@@ -121,6 +131,11 @@ const styles = StyleSheet.create({
         padding: 15,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
+    },
+    deviceNameContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     deviceName: {
         fontSize: 16,
