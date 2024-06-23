@@ -73,6 +73,7 @@ const TabsLayout = () => {
                     header: () => <Header />,
                     tabBarIcon: ({ focused }) =>
                         tabBarIcon(Images.svgs.gear.source, focused),
+                    unmountOnBlur: true,
                 }}
             />
         </Tabs>
