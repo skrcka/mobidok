@@ -96,39 +96,49 @@ export const BleManagerProvider = ({ children }) => {
         saveLastConnectedDevice(lastConnectedDevice);
     }, [lastConnectedDevice]);
 
-    const connectToDevice = (device: Device): Promise<boolean> => {
-        bleManager
+    const connectToDevice = async (device: Device): Promise<boolean> => {
+        const res = await bleManager
             .connectToDevice(device.id)
             .then((connectedDevice) => {
                 console.log('Connected to device:', connectedDevice.name);
-                connectedDevice
+                return connectedDevice
                     .discoverAllServicesAndCharacteristics()
                     .then(() => {
                         setConnectedDevice(connectedDevice);
                         return true;
+                    })
+                    .catch((error) => {
+                        console.log('Discovery error:', error);
+                        return false;
                     });
             })
             .catch((error) => {
                 console.log('Connection error:', error);
+                return false;
             });
-        return Promise.resolve(false);
+        return res;
     };
 
-    const reconnectToDevice = (): Promise<boolean> => {
-        bleManager
+    const reconnectToDevice = async (): Promise<boolean> => {
+        const res = await bleManager
             .connectToDevice(lastConnectedDevice.id)
             .then((connectedDevice) => {
-                connectedDevice
+                return connectedDevice
                     .discoverAllServicesAndCharacteristics()
                     .then(() => {
                         setConnectedDevice(connectedDevice);
                         return true;
+                    })
+                    .catch((error) => {
+                        console.log('Discovery error:', error);
+                        return false;
                     });
             })
             .catch((error) => {
                 console.log('Reconnection error:', error);
+                return false;
             });
-        return Promise.resolve(false);
+        return res;
     };
 
     const scanDevices = (nameFilter?: string) => {
