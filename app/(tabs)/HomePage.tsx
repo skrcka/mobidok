@@ -4,11 +4,13 @@ import { Linking } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useDispatch } from 'react-redux';
 
+import { useAuth } from '../../context/AuthProvider';
 import { APP_URL, OFFLINE_URL } from '../constants/const';
 import { setState } from '../store/offline.reducer';
 
 const HomePage = () => {
     const dispatch = useDispatch();
+    const auth = useAuth();
     const router = useRouter();
     const webviewRef = useRef<WebView>(null);
     const INJECTEDJAVASCRIPT = `
@@ -40,7 +42,7 @@ const HomePage = () => {
 
     return (
         <WebView
-            source={{ uri: APP_URL }}
+            source={{ uri: `${APP_URL}?token=${auth.getToken()}` }}
             ref={webviewRef}
             scalesPageToFit
             allowsBackForwardNavigationGestures

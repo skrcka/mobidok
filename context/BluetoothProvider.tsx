@@ -23,7 +23,7 @@ type BleType = {
         service: string,
         characteristic: string,
         value: string
-    ) => void;
+    ) => Promise<boolean>;
 };
 
 const BleManagerContext = createContext<BleType>({
@@ -37,7 +37,8 @@ const BleManagerContext = createContext<BleType>({
     stopDeviceScan: () => {},
     enableBluetooth: async () => false,
     reconnectToDevice: async () => false,
-    writeToConnectedDevice: (_: string, __: string, ___: string) => {},
+    writeToConnectedDevice: (_: string, __: string, ___: string) =>
+        Promise.resolve(false),
 });
 
 const loadLastConnectedDevice = async () => {
@@ -183,28 +184,48 @@ export const BleManagerProvider = ({ children }) => {
         service: string,
         characteristic: string,
         value: string
-    ) => {
+    ): Promise<boolean> => {
         if (!connectedDevice) {
-            console.log('No connected device');
-            return;
+            if (!lastConnectedDevice) {
+                console.log('No device connected');
+                return false;
+            }
+            const res = await reconnectToDevice();
+            if (!res) {
+                console.log('Reconnection failed');
+                return false;
+            }
         }
 
         const device = await connectedDevice.isConnected();
         if (!device) {
-            console.log('Device is not connected');
-            return;
+            const res = await reconnectToDevice();
+            if (!res) {
+                console.log('Reconnection failed');
+                return false;
+            }
         }
 
+        const encodedText = btoa(value);
+        const chunkSize = 300;
         try {
-            const retCharacteristic =
-                await connectedDevice.writeCharacteristicWithResponseForService(
-                    service,
-                    characteristic,
-                    value
-                );
-            console.log('Writing successful', retCharacteristic);
+            for (let i = 0; i < encodedText.length; i += chunkSize) {
+                const subStr = encodedText.substring(i, i + chunkSize);
+                const retCharacteristic =
+                    await connectedDevice.writeCharacteristicWithResponseForService(
+                        service,
+                        characteristic,
+                        subStr
+                    );
+                if (!retCharacteristic) {
+                    console.log('Write failed');
+                    return false;
+                }
+            }
+            return true;
         } catch (error) {
             console.log('Writing error', error);
+            return false;
         }
     };
 
