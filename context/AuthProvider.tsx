@@ -62,7 +62,7 @@ export function AuthProvider({
     // };
 
     useEffect(() => {
-        router.navigate('/HomePage');
+        router.replace('/HomePage');
     }, [router]);
 
     const authContext: AuthType = {

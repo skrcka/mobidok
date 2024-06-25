@@ -107,6 +107,20 @@ const OfflineMode = () => {
         webviewRef.current.postMessage(message);
     };
 
+    const handleShouldStartLoadWithRequest = (request) => {
+        if (request.url.includes(OFFLINE_URL)) {
+            return true;
+        } else if (request.url.includes(APP_URL)) {
+            router.navigate('HomePage');
+            return false;
+        } else if (!request.url.includes(OFFLINE_URL)) {
+            webviewRef.current.stopLoading();
+            Linking.openURL(request.url);
+            return false;
+        }
+        return false;
+    };
+
     return (
         <WebView
             source={{ uri }}
@@ -116,16 +130,8 @@ const OfflineMode = () => {
             setDisplayZoomControls={false}
             injectedJavaScript={INJECTEDJAVASCRIPT}
             onMessage={handleMessageFromWeb} // window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'greeting', payload: 'Hello from Web App!' }));
-            onNavigationStateChange={(event) => {
-                if (event.url.includes(OFFLINE_URL)) {
-                } else if (event.url.includes(APP_URL)) {
-                    webviewRef.current.stopLoading();
-                    router.navigate('HomePage');
-                } else if (!event.url.includes(OFFLINE_URL)) {
-                    webviewRef.current.stopLoading();
-                    Linking.openURL(event.url);
-                }
-            }}
+            onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
+            javaScriptEnabled
             domStorageEnabled
             allowFileAccess
             startInLoadingState

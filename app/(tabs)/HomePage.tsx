@@ -49,6 +49,7 @@ const HomePage = () => {
             setDisplayZoomControls={false}
             injectedJavaScript={INJECTEDJAVASCRIPT}
             onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
+            javaScriptEnabled
             domStorageEnabled
             allowFileAccess
             startInLoadingState
