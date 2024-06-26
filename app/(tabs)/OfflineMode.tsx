@@ -87,11 +87,13 @@ const OfflineMode = () => {
             }
             case MessageType.TOKEN: {
                 console.log('Token request');
+                const token = auth.getToken();
+                const payload = { token };
                 const response: Response = {
                     id: message.id,
                     type: MessageType.TOKEN,
                     result: MessageResult.OK,
-                    payload: auth.getToken(),
+                    payload,
                 };
                 sendMessageToWeb(response);
                 break;
