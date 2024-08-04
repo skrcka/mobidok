@@ -134,10 +134,13 @@ const OfflineMode = () => {
             onMessage={handleMessageFromWeb} // window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'greeting', payload: 'Hello from Web App!' }));
             onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
             javaScriptEnabled
-            domStorageEnabled
             allowFileAccess
             startInLoadingState
             mediaPlaybackRequiresUserAction={false}
+            collapsable={false}
+            cacheEnabled={false}
+            cacheMode="LOAD_NO_CACHE"
+            domStorageEnabled
         />
     );
 };

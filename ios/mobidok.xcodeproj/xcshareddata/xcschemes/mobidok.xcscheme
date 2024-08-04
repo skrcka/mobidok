@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "mobidok.app"
-               BlueprintName = "mobidok"
-               ReferencedContainer = "container:mobidok.xcodeproj">
+               BuildableName = "Mobidok.app"
+               BlueprintName = "Mobidok"
+               ReferencedContainer = "container:Mobidok.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "mobidokTests.xctest"
-               BlueprintName = "mobidokTests"
-               ReferencedContainer = "container:mobidok.xcodeproj">
+               BuildableName = "MobidokTests.xctest"
+               BlueprintName = "MobidokTests"
+               ReferencedContainer = "container:Mobidok.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "mobidok.app"
-            BlueprintName = "mobidok"
-            ReferencedContainer = "container:mobidok.xcodeproj">
+            BuildableName = "Mobidok.app"
+            BlueprintName = "Mobidok"
+            ReferencedContainer = "container:Mobidok.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "mobidok.app"
-            BlueprintName = "mobidok"
-            ReferencedContainer = "container:mobidok.xcodeproj">
+            BuildableName = "Mobidok.app"
+            BlueprintName = "Mobidok"
+            ReferencedContainer = "container:Mobidok.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

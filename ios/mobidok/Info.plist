@@ -28,7 +28,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>mobidok</string>
-          <string>com.bmisystem.mobidok</string>
+          <string>com.bmisystem.mobidoksmvak</string>
         </array>
       </dict>
       <dict>
@@ -57,13 +57,6 @@
     <string>Allow $(PRODUCT_NAME) to use camera</string>
     <key>NSUserActivityTypes</key>
     <array>
-      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
-      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
-      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
-      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
-      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
-      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
-      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
     </array>
     <key>UIBackgroundModes</key>
