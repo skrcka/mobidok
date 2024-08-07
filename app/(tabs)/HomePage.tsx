@@ -1,6 +1,14 @@
 import { useRouter } from 'expo-router';
-import { useRef } from 'react';
-import { Linking, View, Text, Button, StyleSheet } from 'react-native';
+import { useRef, useState } from 'react';
+import {
+    Linking,
+    View,
+    Text,
+    Button,
+    StyleSheet,
+    ScrollView,
+    RefreshControl,
+} from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useDispatch } from 'react-redux';
 
@@ -13,6 +21,7 @@ const HomePage = () => {
     const auth = useAuth();
     const router = useRouter();
     const webviewRef = useRef<WebView>(null);
+    const [refreshing, setRefreshing] = useState(false);
 
     const handleShouldStartLoadWithRequest = (request) => {
         if (request.url.includes(OFFLINE_URL)) {
@@ -34,43 +43,59 @@ const HomePage = () => {
         return true;
     };
 
+    const onRefresh = () => {
+        setRefreshing(true);
+        if (webviewRef.current) {
+            webviewRef.current.reload();
+        }
+        setRefreshing(false);
+    };
+
     return (
-        <WebView
-            source={{ uri: `${APP_URL}?token=${auth.getToken()}` }}
-            ref={webviewRef}
-            scalesPageToFit
-            allowsBackForwardNavigationGestures
-            setDisplayZoomControls={false}
-            onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
-            javaScriptEnabled
-            domStorageEnabled
-            allowFileAccess
-            startInLoadingState
-            mediaPlaybackRequiresUserAction={false}
-            renderError={(_, code, desc) => (
-                <View style={styles.errorContainer}>
-                    <Text>
-                        {code === -6 ? 'Chyba připojení' : 'Neznámá chyba'}
-                    </Text>
-                    <Button
-                        title="Zkusit znovu"
-                        onPress={() => {
-                            webviewRef.current.reload();
-                        }}
-                    />
-                    <Text
-                        style={
-                            styles.errorDescription
-                        }>{`Detail: ${desc}`}</Text>
-                </View>
-            )}
-        />
+        <ScrollView
+            contentContainerStyle={{ flex: 1 }}
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
+            <WebView
+                source={{ uri: `${APP_URL}?token=${auth.getToken()}` }}
+                ref={webviewRef}
+                scalesPageToFit
+                allowsBackForwardNavigationGestures
+                setDisplayZoomControls={false}
+                onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
+                javaScriptEnabled
+                domStorageEnabled
+                allowFileAccess
+                startInLoadingState
+                mediaPlaybackRequiresUserAction={false}
+                renderError={(_, code, desc) => (
+                    <View style={styles.errorContainer}>
+                        <Text>
+                            {code === -6 ? 'Chyba připojení' : 'Neznámá chyba'}
+                        </Text>
+                        <Button
+                            title="Zkusit znovu"
+                            onPress={() => {
+                                webviewRef.current.reload();
+                            }}
+                        />
+                        <Text
+                            style={
+                                styles.errorDescription
+                            }>{`Detail: ${desc}`}</Text>
+                    </View>
+                )}
+            />
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     errorContainer: {
         flex: 1,
+        height: '100%',
+        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 16,
