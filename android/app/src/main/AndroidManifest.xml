@@ -34,7 +34,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="mobidok"/>
-        <data android:scheme="com.bmisystem.mobidoksmvak"/>
+        <data android:scheme="com.bmisystem.mobidok"/>
         <data android:scheme="exp+mobidok"/>
       </intent-filter>
     </activity>

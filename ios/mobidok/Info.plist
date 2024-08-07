@@ -28,7 +28,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>mobidok</string>
-          <string>com.bmisystem.mobidoksmvak</string>
+          <string>com.bmisystem.mobidok</string>
         </array>
       </dict>
       <dict>
