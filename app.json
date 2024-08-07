@@ -17,7 +17,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bmisystem.mobidoksmvak",
+      "bundleIdentifier": "com.bmisystem.mobidok",
       "icon": "./assets/icon.png",
       "infoPlist": {
         "NSBluetoothAlwaysUsageDescription": "Allow $(PRODUCT_NAME) to connect to bluetooth devices",
@@ -43,7 +43,7 @@
         "BLUETOOTH_CONNECT",
         "CAMERA"
       ],
-      "package": "com.bmisystem.mobidoksmvak"
+      "package": "com.bmisystem.mobidok"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useRef } from 'react';
-import { Linking } from 'react-native';
+import { Linking, View, Text, Button, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useDispatch } from 'react-redux';
 
@@ -13,12 +13,6 @@ const HomePage = () => {
     const auth = useAuth();
     const router = useRouter();
     const webviewRef = useRef<WebView>(null);
-    const INJECTEDJAVASCRIPT = `
-        const meta = document.createElement('meta');
-        meta.setAttribute('content', initial-scale=0.5, maximum-scale=0.5, user-scalable=0');
-        meta.setAttribute('name', 'viewport');
-        document.getElementsByTagName('head')[0].appendChild(meta);
-    `;
 
     const handleShouldStartLoadWithRequest = (request) => {
         if (request.url.includes(OFFLINE_URL)) {
@@ -47,14 +41,50 @@ const HomePage = () => {
             scalesPageToFit
             allowsBackForwardNavigationGestures
             setDisplayZoomControls={false}
-            injectedJavaScript={INJECTEDJAVASCRIPT}
             onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
             javaScriptEnabled
             domStorageEnabled
             allowFileAccess
             startInLoadingState
             mediaPlaybackRequiresUserAction={false}
+            renderError={(_, code, desc) => (
+                <View style={styles.errorContainer}>
+                    <Text>
+                        {code === -6 ? 'Chyba připojení' : 'Neznámá chyba'}
+                    </Text>
+                    <Button
+                        title="Zkusit znovu"
+                        onPress={() => {
+                            webviewRef.current.reload();
+                        }}
+                    />
+                    <Text
+                        style={
+                            styles.errorDescription
+                        }>{`Detail: ${desc}`}</Text>
+                </View>
+            )}
         />
     );
 };
+
+const styles = StyleSheet.create({
+    errorContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 16,
+    },
+    errorText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 8,
+    },
+    errorDescription: {
+        fontSize: 14,
+        marginBottom: 16,
+        textAlign: 'center',
+    },
+});
+
 export default HomePage;
