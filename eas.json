@@ -16,7 +16,8 @@
     "ipa": {
       "distribution": "internal",
       "ios": {
-        "buildType": "development"
+        "scheme": "mobidok",
+        "buildConfiguration": "Release"
       }
     },
     "production": {}
