@@ -1,13 +1,5 @@
 import * as Application from 'expo-application';
-import { useEffect } from 'react';
-import {
-    View,
-    Text,
-    FlatList,
-    TouchableOpacity,
-    StyleSheet,
-    Button,
-} from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 import BluetoothSettings from '../components/bluetoothSetting';
 

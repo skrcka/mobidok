@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 
 import { useAuth } from '../../context/AuthProvider';
 import { useBleManager } from '../../context/BluetoothProvider';
+import { WebViewErrorPage } from '../components/webviewErrorPage';
 import {
     Message,
     MessageResult,
@@ -141,6 +142,16 @@ const OfflineMode = () => {
             cacheEnabled={false}
             cacheMode="LOAD_NO_CACHE"
             domStorageEnabled
+            renderError={(domain, code, desc) => (
+                <WebViewErrorPage
+                    domain={domain}
+                    code={code}
+                    desc={desc}
+                    onRefresh={() => {
+                        webviewRef.current.reload();
+                    }}
+                />
+            )}
         />
     );
 };

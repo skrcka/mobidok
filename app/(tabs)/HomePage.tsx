@@ -1,18 +1,11 @@
 import { useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
-import {
-    Linking,
-    View,
-    Text,
-    Button,
-    StyleSheet,
-    ScrollView,
-    RefreshControl,
-} from 'react-native';
+import { Linking, ScrollView, RefreshControl } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useDispatch } from 'react-redux';
 
 import { useAuth } from '../../context/AuthProvider';
+import { WebViewErrorPage } from '../components/webviewErrorPage';
 import { APP_URL, OFFLINE_URL } from '../constants/const';
 import { setState } from '../store/offline.reducer';
 
@@ -69,47 +62,17 @@ const HomePage = () => {
                 allowFileAccess
                 startInLoadingState
                 mediaPlaybackRequiresUserAction={false}
-                renderError={(_, code, desc) => (
-                    <View style={styles.errorContainer}>
-                        <Text>
-                            {code === -6 ? 'Chyba připojení' : 'Neznámá chyba'}
-                        </Text>
-                        <Button
-                            title="Zkusit znovu"
-                            onPress={() => {
-                                webviewRef.current.reload();
-                            }}
-                        />
-                        <Text
-                            style={
-                                styles.errorDescription
-                            }>{`Detail: ${desc}`}</Text>
-                    </View>
+                renderError={(domain, code, desc) => (
+                    <WebViewErrorPage
+                        domain={domain}
+                        code={code}
+                        desc={desc}
+                        onRefresh={onRefresh}
+                    />
                 )}
             />
         </ScrollView>
     );
 };
-
-const styles = StyleSheet.create({
-    errorContainer: {
-        flex: 1,
-        height: '100%',
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 16,
-    },
-    errorText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 8,
-    },
-    errorDescription: {
-        fontSize: 14,
-        marginBottom: 16,
-        textAlign: 'center',
-    },
-});
 
 export default HomePage;
