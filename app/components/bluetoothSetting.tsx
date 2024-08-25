@@ -32,7 +32,7 @@ const BluetoothSettings = () => {
         return () => {
             bleManager.stopDeviceScan();
         };
-    }, [bleManager]);
+    }, []);
 
     const renderItem = ({ item }) => (
         <TouchableOpacity
