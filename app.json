@@ -2,7 +2,7 @@
   "expo": {
     "name": "Mobidok",
     "slug": "mobidok",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "orientation": "portrait",
     "scheme": "mobidok",
     "icon": "./assets/icon.png",
