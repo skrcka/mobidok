@@ -16,11 +16,11 @@ export const WebViewErrorPage = ({
     <View style={styles.errorContainer}>
         <Text>Cíl: {domain}</Text>
         <Text>
-            {code === -6
+            {[-6, -1009].includes(code)
                 ? 'Chyba připojení'
                 : code === -2
                   ? 'Chyba připojení (DNS)'
-                  : 'Neznámá chyba'}
+                  : `Neznámá chyba ${code}`}
         </Text>
         <Button
             title="Zkusit znovu"

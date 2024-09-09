@@ -1,4 +1,4 @@
-package com.bmisystem.mobidok
+package com.bmisystem.mobidoksmvak
 
 import android.app.Application
 import android.content.res.Configuration

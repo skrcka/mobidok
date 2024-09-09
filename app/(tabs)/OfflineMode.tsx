@@ -132,19 +132,18 @@ const OfflineMode = () => {
             allowsBackForwardNavigationGestures
             setDisplayZoomControls={false}
             injectedJavaScript={INJECTEDJAVASCRIPT}
-            onMessage={handleMessageFromWeb} // window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'greeting', payload: 'Hello from Web App!' }));
+            onMessage={handleMessageFromWeb}
             onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
             javaScriptEnabled
             allowFileAccess
             startInLoadingState
             mediaPlaybackRequiresUserAction={false}
             collapsable={false}
-            cacheEnabled={false}
-            cacheMode="LOAD_NO_CACHE"
+            cacheEnabled
             domStorageEnabled
-            renderError={(domain, code, desc) => (
+            renderError={(_, code, desc) => (
                 <WebViewErrorPage
-                    domain={domain}
+                    domain={uri}
                     code={code}
                     desc={desc}
                     onRefresh={() => {

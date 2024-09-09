@@ -17,31 +17,36 @@ const tabBarIcon = (iconSource, focused) => (
 
 const TabsLayout = () => {
     return (
-        <Tabs initialRouteName="HomePage">
+        <Tabs initialRouteName="HomePage" detachInactiveScreens={false}>
             <Tabs.Screen
                 name="HomePage"
                 options={{
                     tabBarShowLabel: false,
+                    lazy: false,
                     headerShown: true,
                     header: () => <Header />,
                     tabBarIcon: ({ focused }) =>
                         tabBarIcon(Images.svgs.home.source, focused),
+                    unmountOnBlur: false,
                 }}
             />
             <Tabs.Screen
                 name="OfflineMode"
                 options={{
                     tabBarShowLabel: false,
+                    lazy: false,
                     headerShown: true,
                     header: () => <Header />,
                     tabBarIcon: ({ focused }) =>
                         tabBarIcon(Images.svgs.document.source, focused),
+                    unmountOnBlur: false,
                 }}
             />
             <Tabs.Screen
                 name="Settings"
                 options={{
                     tabBarShowLabel: false,
+                    lazy: false,
                     headerShown: true,
                     header: () => <Header />,
                     tabBarIcon: ({ focused }) =>

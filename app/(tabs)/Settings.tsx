@@ -11,8 +11,9 @@ const Settings = () => {
             </View>
             <View style={styles.copyrightContainer}>
                 <Text style={styles.copyrightText}>
-                    v{Application.nativeApplicationVersion} - Copyright @ BMI
-                    SYSTEM s.r.o. 2023
+                    v{Application.nativeApplicationVersion} (
+                    {Application.nativeBuildVersion}) - Copyright @ BMI SYSTEM
+                    s.r.o. 2023
                 </Text>
             </View>
         </>

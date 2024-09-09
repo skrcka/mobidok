@@ -44,6 +44,8 @@ const HomePage = () => {
         setRefreshing(false);
     };
 
+    const uri = `${APP_URL}?token=${auth.getToken()}`;
+
     return (
         <ScrollView
             contentContainerStyle={{ flex: 1 }}
@@ -51,7 +53,7 @@ const HomePage = () => {
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }>
             <WebView
-                source={{ uri: `${APP_URL}?token=${auth.getToken()}` }}
+                source={{ uri }}
                 ref={webviewRef}
                 scalesPageToFit
                 allowsBackForwardNavigationGestures
@@ -62,9 +64,10 @@ const HomePage = () => {
                 allowFileAccess
                 startInLoadingState
                 mediaPlaybackRequiresUserAction={false}
-                renderError={(domain, code, desc) => (
+                cacheEnabled
+                renderError={(_, code, desc) => (
                     <WebViewErrorPage
-                        domain={domain}
+                        domain={uri}
                         code={code}
                         desc={desc}
                         onRefresh={onRefresh}

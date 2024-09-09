@@ -2,7 +2,7 @@
   "expo": {
     "name": "Mobidok",
     "slug": "mobidok",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "orientation": "portrait",
     "scheme": "mobidok",
     "icon": "./assets/icon.png",
@@ -17,8 +17,9 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bmisystem.mobidok",
+      "bundleIdentifier": "com.bmisystem.mobidoksmvak",
       "icon": "./assets/icon.png",
+      "buildNumber": "2",
       "infoPlist": {
         "NSBluetoothAlwaysUsageDescription": "Allow $(PRODUCT_NAME) to connect to bluetooth devices",
         "NSBluetoothPeripheralUsageDescription": "Allow $(PRODUCT_NAME) to connect to bluetooth devices",
@@ -30,6 +31,7 @@
       }
     },
     "android": {
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0077be"
@@ -43,7 +45,7 @@
         "BLUETOOTH_CONNECT",
         "CAMERA"
       ],
-      "package": "com.bmisystem.mobidok"
+      "package": "com.bmisystem.mobidoksmvak"
     },
     "web": {
       "favicon": "./assets/favicon.png"

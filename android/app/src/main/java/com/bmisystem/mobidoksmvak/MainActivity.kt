@@ -1,4 +1,4 @@
-package com.bmisystem.mobidok
+package com.bmisystem.mobidoksmvak
 
 import android.os.Build
 import android.os.Bundle
