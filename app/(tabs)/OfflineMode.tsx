@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Linking } from 'react-native';
+import { Linking, Platform } from 'react-native';
 import WebView, { WebViewMessageEvent } from 'react-native-webview';
 import { useSelector } from 'react-redux';
 
@@ -28,29 +28,20 @@ const OfflineMode = () => {
     const webviewRef = useRef<WebView>(null);
     const typ_ids = useSelector((state: RootState) => state.offline.typ_ids);
     const user_id = useSelector((state: RootState) => state.offline.user_id);
-    const INJECTEDJAVASCRIPT = `
-        (function() {
-            const originalLog = console.log;
-            console.log = function(...args) {
-                window.ReactNativeWebView.postMessage(JSON.stringify({ type: 0, payload: args }));
-                originalLog.apply(console, args);
-            };
-        })();
-        const meta = document.createElement('meta');
-        meta.setAttribute('content', initial-scale=0.5, maximum-scale=0.5, user-scalable=0');
-        meta.setAttribute('name', 'viewport');
-        document.getElementsByTagName('head')[0].appendChild(meta);
-    `;
 
-    const [uri, setUri] = useState<string>(OFFLINE_URL);
+    const sourceUri =
+        (Platform.OS === 'android' ? 'file:///android_asset/' : '') +
+        'build/index.html';
+
+    const [uri, setUri] = useState<string>(sourceUri);
 
     useEffect(() => {
-        const url = new URL(OFFLINE_URL);
+        const url = new URL(sourceUri);
         if (typ_ids) url.searchParams.append('typ_id', typ_ids.join(','));
         url.searchParams.append('uzivatelId', user_id);
         const uri = url.toString();
         setUri(uri);
-    }, [typ_ids, user_id]);
+    }, [typ_ids, user_id, sourceUri]);
 
     const handleMessageFromWeb = (event: WebViewMessageEvent) => {
         const message: Message = JSON.parse(event.nativeEvent.data);
@@ -131,9 +122,9 @@ const OfflineMode = () => {
             scalesPageToFit
             allowsBackForwardNavigationGestures
             setDisplayZoomControls={false}
-            injectedJavaScript={INJECTEDJAVASCRIPT}
             onMessage={handleMessageFromWeb}
-            onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
+            originWhitelist={['*']}
+            // onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
             javaScriptEnabled
             allowFileAccess
             startInLoadingState
@@ -143,7 +134,7 @@ const OfflineMode = () => {
             domStorageEnabled
             renderError={(_, code, desc) => (
                 <WebViewErrorPage
-                    domain={uri}
+                    domain={sourceUri}
                     code={code}
                     desc={desc}
                     onRefresh={() => {
