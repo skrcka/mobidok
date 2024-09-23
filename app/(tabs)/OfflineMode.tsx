@@ -31,7 +31,7 @@ const OfflineMode = () => {
 
     const sourceUri =
         (Platform.OS === 'android' ? 'file:///android_asset/' : '') +
-        'build/index.html';
+        'www/index.html';
 
     const [uri, setUri] = useState<string>(sourceUri);
 
