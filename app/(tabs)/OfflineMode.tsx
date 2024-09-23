@@ -102,7 +102,7 @@ const OfflineMode = () => {
     };
 
     const handleShouldStartLoadWithRequest = (request) => {
-        if (request.url.includes(OFFLINE_URL)) {
+        if (request.url.includes(sourceUri)) {
             return true;
         } else if (request.url.includes(APP_URL)) {
             router.navigate('HomePage');
@@ -124,7 +124,7 @@ const OfflineMode = () => {
             setDisplayZoomControls={false}
             onMessage={handleMessageFromWeb}
             originWhitelist={['*']}
-            // onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
+            onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
             javaScriptEnabled
             allowFileAccess
             startInLoadingState
