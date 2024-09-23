@@ -62,7 +62,6 @@ const HomePage = () => {
                 javaScriptEnabled
                 domStorageEnabled
                 allowFileAccess
-                startInLoadingState
                 mediaPlaybackRequiresUserAction={false}
                 cacheEnabled
                 renderError={(_, code, desc) => (
