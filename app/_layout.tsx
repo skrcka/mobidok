@@ -8,6 +8,8 @@ import {
     TouchableWithoutFeedback,
     View,
 } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { NotifierWrapper } from 'react-native-notifier';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 
 import Sidebar from './components/SideBar';
@@ -15,6 +17,7 @@ import { closeSidebar } from './store/sidebar.reducer';
 import store, { AppDispatch, RootState } from './store/store';
 import { AuthProvider } from '../context/AuthProvider';
 import { BleManagerProvider } from '../context/BluetoothProvider';
+import { ConnectionStatusProvider } from '../context/ConnectionStatusProvider';
 import { PermissionProvider } from '../context/PermissionProvider';
 
 const App = () => {
@@ -69,9 +72,15 @@ const AppLayout = () => {
         <Provider store={store}>
             <PermissionProvider>
                 <BleManagerProvider>
-                    <AuthProvider>
-                        <App />
-                    </AuthProvider>
+                    <GestureHandlerRootView style={{ flex: 1 }}>
+                        <NotifierWrapper>
+                            <ConnectionStatusProvider>
+                                <AuthProvider>
+                                    <App />
+                                </AuthProvider>
+                            </ConnectionStatusProvider>
+                        </NotifierWrapper>
+                    </GestureHandlerRootView>
                 </BleManagerProvider>
             </PermissionProvider>
         </Provider>

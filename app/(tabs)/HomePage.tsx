@@ -1,10 +1,12 @@
 import { useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Linking, ScrollView, RefreshControl } from 'react-native';
+import { Notifier, Easing, NotifierComponents } from 'react-native-notifier';
 import { WebView } from 'react-native-webview';
 import { useDispatch } from 'react-redux';
 
 import { useAuth } from '../../context/AuthProvider';
+import { useConnectionStatus } from '../../context/ConnectionStatusProvider';
 import { WebViewErrorPage } from '../components/webviewErrorPage';
 import { APP_URL, OFFLINE_URL } from '../constants/const';
 import { setState } from '../store/offline.reducer';
@@ -15,6 +17,7 @@ const HomePage = () => {
     const router = useRouter();
     const webviewRef = useRef<WebView>(null);
     const [refreshing, setRefreshing] = useState(false);
+    const { isInternetReachable } = useConnectionStatus();
 
     const handleShouldStartLoadWithRequest = (request) => {
         if (request.url.includes(OFFLINE_URL)) {
@@ -29,6 +32,21 @@ const HomePage = () => {
             );
             router.navigate('OfflineMode');
             return false;
+        } else if (!isInternetReachable) {
+            Notifier.showNotification({
+                title: 'Nejste připojeni k internetu',
+                description:
+                    'Bez internetu lze fungovat pouze v záložce OFFLINE',
+                duration: 3,
+                Component: NotifierComponents.Alert,
+                componentProps: {
+                    alertType: 'error',
+                },
+                showAnimationDuration: 800,
+                showEasing: Easing.bounce,
+                hideOnPress: true,
+            });
+            return false;
         } else if (!request.url.includes(APP_URL)) {
             Linking.openURL(request.url);
             return false;
@@ -37,6 +55,21 @@ const HomePage = () => {
     };
 
     const onRefresh = () => {
+        if (!isInternetReachable) {
+            Notifier.showNotification({
+                title: 'Nepodařilo se obnovit stránku',
+                description: 'Nejste připojeni k internetu',
+                duration: 3,
+                Component: NotifierComponents.Alert,
+                componentProps: {
+                    alertType: 'error',
+                },
+                showAnimationDuration: 800,
+                showEasing: Easing.bounce,
+                hideOnPress: true,
+            });
+            return;
+        }
         setRefreshing(true);
         if (webviewRef.current) {
             webviewRef.current.reload();
@@ -64,6 +97,7 @@ const HomePage = () => {
                 allowFileAccess
                 mediaPlaybackRequiresUserAction={false}
                 cacheEnabled
+                startInLoadingState
                 renderError={(_, code, desc) => (
                     <WebViewErrorPage
                         domain={uri}

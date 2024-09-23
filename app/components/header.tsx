@@ -1,55 +1,16 @@
 import { faWifi } from '@fortawesome/free-solid-svg-icons/faWifi';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import NetInfo from '@react-native-community/netinfo';
 import { usePathname } from 'expo-router';
-import { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 
-enum NetworkQuality {
-    WIFI,
-    GOOD,
-    MEDIUM,
-    BAD,
-    UNKNOWN,
-}
+import {
+    NetworkQuality,
+    useConnectionStatus,
+} from '../../context/ConnectionStatusProvider';
 
 const Header = () => {
     const path = usePathname();
-    const [connectionQuality, setConnectionQuality] = useState<NetworkQuality>(
-        NetworkQuality.UNKNOWN
-    );
-
-    useEffect(() => {
-        const unsubscribe = NetInfo.addEventListener((state) => {
-            console.log(state);
-            if (!state.isInternetReachable) {
-                setConnectionQuality(NetworkQuality.BAD);
-                return;
-            }
-            if (state.type === 'wifi') {
-                setConnectionQuality(NetworkQuality.WIFI);
-                return;
-            }
-            if (state.type === 'cellular') {
-                switch (state.details.cellularGeneration) {
-                    case '2g':
-                        setConnectionQuality(NetworkQuality.BAD);
-                        break;
-                    case '3g':
-                        setConnectionQuality(NetworkQuality.MEDIUM);
-                        break;
-                    case '4g':
-                        setConnectionQuality(NetworkQuality.GOOD);
-                        break;
-                    default:
-                        setConnectionQuality(NetworkQuality.UNKNOWN);
-                }
-            }
-        });
-
-        // Unsubscribe to clean up
-        return () => unsubscribe();
-    }, []);
+    const { networkQuality } = useConnectionStatus();
 
     return (
         <>
@@ -77,21 +38,21 @@ const Header = () => {
                     <Text>Mobidok</Text>
                 </View>
                 <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                    {connectionQuality === NetworkQuality.WIFI ? (
+                    {networkQuality === NetworkQuality.WIFI ? (
                         <FontAwesomeIcon icon={faWifi} size={30} color="blue" />
-                    ) : connectionQuality === NetworkQuality.GOOD ? (
+                    ) : networkQuality === NetworkQuality.GOOD ? (
                         <FontAwesomeIcon
                             icon={faWifi}
                             size={30}
                             color="green"
                         />
-                    ) : connectionQuality === NetworkQuality.MEDIUM ? (
+                    ) : networkQuality === NetworkQuality.MEDIUM ? (
                         <FontAwesomeIcon
                             icon={faWifi}
                             size={30}
                             color="orange"
                         />
-                    ) : connectionQuality === NetworkQuality.BAD ? (
+                    ) : networkQuality === NetworkQuality.BAD ? (
                         <FontAwesomeIcon icon={faWifi} size={30} color="red" />
                     ) : (
                         <FontAwesomeIcon icon={faWifi} size={30} color="gray" />
