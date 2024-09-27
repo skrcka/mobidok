@@ -2,7 +2,7 @@
   "expo": {
     "name": "Mobidok",
     "slug": "mobidok",
-    "version": "2.2.0",
+    "version": "2.2.1",
     "orientation": "portrait",
     "scheme": "mobidok",
     "icon": "./assets/icon.png",
@@ -19,7 +19,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.bmisystem.mobidoksmvak",
       "icon": "./assets/icon.png",
-      "buildNumber": "3",
+      "buildNumber": "4",
       "infoPlist": {
         "NSBluetoothAlwaysUsageDescription": "Allow $(PRODUCT_NAME) to connect to bluetooth devices",
         "NSBluetoothPeripheralUsageDescription": "Allow $(PRODUCT_NAME) to connect to bluetooth devices",
@@ -31,7 +31,7 @@
       }
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 4,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0077be"

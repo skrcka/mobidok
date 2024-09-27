@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
-import { useRef, useState } from 'react';
-import { Linking, ScrollView, RefreshControl } from 'react-native';
+import { useRef } from 'react';
+import { Linking, ScrollView } from 'react-native';
 import { Notifier, Easing, NotifierComponents } from 'react-native-notifier';
 import { WebView } from 'react-native-webview';
 import { useDispatch } from 'react-redux';
@@ -16,7 +16,6 @@ const HomePage = () => {
     const auth = useAuth();
     const router = useRouter();
     const webviewRef = useRef<WebView>(null);
-    const [refreshing, setRefreshing] = useState(false);
     const { isInternetReachable } = useConnectionStatus();
 
     const handleShouldStartLoadWithRequest = (request) => {
@@ -70,21 +69,15 @@ const HomePage = () => {
             });
             return;
         }
-        setRefreshing(true);
         if (webviewRef.current) {
             webviewRef.current.reload();
         }
-        setRefreshing(false);
     };
 
     const uri = `${APP_URL}?token=${auth.getToken()}`;
 
     return (
-        <ScrollView
-            contentContainerStyle={{ flex: 1 }}
-            refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }>
+        <ScrollView contentContainerStyle={{ flex: 1 }}>
             <WebView
                 source={{ uri }}
                 ref={webviewRef}
