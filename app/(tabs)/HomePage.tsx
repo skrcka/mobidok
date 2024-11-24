@@ -1,8 +1,9 @@
 import { useRouter } from 'expo-router';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Linking, ScrollView } from 'react-native';
 import { Notifier, Easing, NotifierComponents } from 'react-native-notifier';
 import { WebView } from 'react-native-webview';
+import { WebViewErrorEvent } from 'react-native-webview/lib/RNCWebViewNativeComponent';
 import { useDispatch } from 'react-redux';
 
 import { useAuth } from '../../context/AuthProvider';
@@ -17,6 +18,19 @@ const HomePage = () => {
     const router = useRouter();
     const webviewRef = useRef<WebView>(null);
     const { isInternetReachable } = useConnectionStatus();
+
+    const [intitialRender, setInitialRender] = useState(true);
+    const [error, setError] = useState<WebViewErrorEvent | null>(null);
+
+    useEffect(() => {
+        if (intitialRender) {
+            setInitialRender(false);
+            return;
+        }
+        if (error === null && webviewRef.current) {
+            webviewRef.current.reload();
+        }
+    }, [error]);
 
     const handleShouldStartLoadWithRequest = (request) => {
         if (request.url.includes(OFFLINE_URL)) {
@@ -69,12 +83,23 @@ const HomePage = () => {
             });
             return;
         }
-        if (webviewRef.current) {
-            webviewRef.current.reload();
-        }
+        setError(null);
     };
 
     const uri = `${APP_URL}?token=${auth.getToken()}`;
+
+    if (error) {
+        console.log('WebView error:', error);
+
+        return (
+            <WebViewErrorPage
+                domain={error.url}
+                code={error.code}
+                desc={error.description}
+                onRefresh={onRefresh}
+            />
+        );
+    }
 
     return (
         <ScrollView contentContainerStyle={{ flex: 1 }}>
@@ -91,14 +116,9 @@ const HomePage = () => {
                 mediaPlaybackRequiresUserAction={false}
                 cacheEnabled
                 startInLoadingState
-                renderError={(_, code, desc) => (
-                    <WebViewErrorPage
-                        domain={uri}
-                        code={code}
-                        desc={desc}
-                        onRefresh={onRefresh}
-                    />
-                )}
+                onError={(event) => {
+                    setError(event.nativeEvent);
+                }}
             />
         </ScrollView>
     );
